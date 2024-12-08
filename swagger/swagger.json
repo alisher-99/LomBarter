@@ -1,0 +1,480 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Сервис для работы с ServiceName",
+        "title": "ServiceName API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {
+        "/v1/orders": {
+            "get": {
+                "description": "Список заказов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Список заказов",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Идентификатор пользователя",
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/entity.List"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/entity.Order"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Код ошибки",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse400"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse500"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Создание заказа",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Создание заказа",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Идентификатор пользователя",
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Заказ",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/form.OrderCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/presenter.CreatedOrder"
+                        }
+                    },
+                    "400": {
+                        "description": "Код ошибки",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse400"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse500"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/orders/{orderID}": {
+            "get": {
+                "description": "Информация о заказе",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Информация о заказе",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Идентификатор пользователя",
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Идентификатор заказа",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Код ошибки",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse400"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse500"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users": {
+            "get": {
+                "description": "Получение списка пользователей",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Получение списка пользователей",
+                "parameters": [
+                    {
+                        "maxLength": 255,
+                        "minLength": 3,
+                        "type": "string",
+                        "description": "Имя пользователя",
+                        "name": "bio",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/entity.List"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/entity.User"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Код ошибки",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse400"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse500"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Создание пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Создание пользователя",
+                "parameters": [
+                    {
+                        "description": "Пользователь",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/form.UserCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Код ошибки",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse400"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse500"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/users/{id}": {
+            "get": {
+                "description": "Получение пользователя по идентификатору",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Получение пользователя по идентификатору",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Идентификатор пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Код ошибки",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse400"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/swagger.HTTPResponse500"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entity.List": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "description": "Количество сущностей",
+                    "type": "integer"
+                },
+                "items": {
+                    "description": "Список сущностей"
+                },
+                "state": {
+                    "description": "Состояние пагинации",
+                    "type": "string"
+                }
+            }
+        },
+        "entity.Order": {
+            "type": "object",
+            "properties": {
+                "cost": {
+                    "description": "Стоимость заказа",
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "description": "Дата создания заказа",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Идентификатор заказа",
+                    "type": "string"
+                },
+                "userID": {
+                    "description": "Идентификатор пользователя",
+                    "type": "string"
+                }
+            }
+        },
+        "entity.User": {
+            "type": "object",
+            "properties": {
+                "bio": {
+                    "description": "Биография пользователя",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "Дата создания пользователя",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Идентификатор пользователя",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Имя пользователя",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "description": "Дата обновления пользователя",
+                    "type": "string"
+                }
+            }
+        },
+        "form.OrderCreate": {
+            "type": "object",
+            "required": [
+                "cost"
+            ],
+            "properties": {
+                "cost": {
+                    "description": "Стоимость заказа",
+                    "type": "integer",
+                    "example": 39900
+                }
+            }
+        },
+        "form.UserCreate": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "bio": {
+                    "description": "Биография пользователя",
+                    "type": "string",
+                    "maxLength": 500,
+                    "minLength": 3
+                },
+                "name": {
+                    "description": "Имя пользователя",
+                    "type": "string",
+                    "maxLength": 255,
+                    "minLength": 3
+                }
+            }
+        },
+        "presenter.CreatedOrder": {
+            "type": "object",
+            "properties": {
+                "cost": {
+                    "description": "Стоимость заказа",
+                    "type": "integer",
+                    "example": 39900
+                },
+                "id": {
+                    "description": "Идентификатор заказа",
+                    "type": "string",
+                    "example": "655d8a3577a0a79c69a7cdfc"
+                },
+                "userID": {
+                    "description": "Идентификатор пользователя",
+                    "type": "string",
+                    "example": "655d8a4d3afea534e56b570e"
+                }
+            }
+        },
+        "swagger.HTTPResponse400": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Код ошибки.",
+                    "type": "string",
+                    "example": "TMP_INVALID_USER"
+                }
+            }
+        },
+        "swagger.HTTPResponse500": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Код ошибки.",
+                    "type": "string",
+                    "example": "TMP_INTERNAL"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}

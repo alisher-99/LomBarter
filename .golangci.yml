@@ -1,0 +1,168 @@
+linters-settings:
+  gci:
+    local-prefixes: github.com/alisher-99/LomBarter
+  dupl:
+    threshold: 100
+  errorlint:
+    errorf: true
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  exhaustive:
+    check-generated: false
+    default-signifies-exhaustive: false
+  funlen:
+    lines: 65
+    statements: 40
+  gocognit:
+    min-complexity: 15
+  gocyclo:
+    min-complexity: 10
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - dupImport
+      - unnecessaryBlock
+  gofumpt:
+    extra-rules: true
+  gomnd:
+    settings:
+      mnd:
+        checks:
+          - argument
+          - case
+          - condition
+          - operation
+          - return
+  govet:
+    check-shadowing: true
+  misspell:
+    locale: US
+  nestif:
+    min-complexity: 4
+  nolintlint:
+    require-explanation: true
+    require-specific: true
+  gosec:
+    # Filter out the issues with a lower confidence than the given value.
+    # Valid options are: low, medium, high.
+    # Default: low
+    confidence: medium
+  godox:
+    # Report any comments starting with keywords, this is useful for TODO or FIXME comments that
+    # might be left in the code accidentally and should be resolved before merging.
+    # Default: ["TODO", "BUG", "FIXME"]
+    keywords:
+      - BUG
+      - FIXME
+      #- NOTE
+      #- OPTIMIZE # marks code that should be optimized before merging
+      #- HACK # marks hack-around that should be removed before merging
+
+linters:
+  disable-all: true
+  enable:
+    - asciicheck
+    - bodyclose
+    - cyclop
+    - deadcode
+    - dogsled
+    - dupl
+    - durationcheck
+    - errcheck
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - forbidigo
+    - funlen
+    - gci
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - goerr113
+    - gofmt
+    - gofumpt
+    - goimports
+    - gomnd
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - makezero
+    - misspell
+    - nakedret
+    - nestif
+    - nlreturn
+    - noctx
+    - nolintlint
+    - paralleltest
+    - predeclared
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - structcheck
+    - stylecheck
+    - tparallel
+    - thelper
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - wsl
+    - whitespace
+
+# disable:
+#    - exhaustivestruct
+#    - ifshort
+#    - goheader
+#    - prealloc
+#    - testpackage
+#    - wrapcheck
+
+issues:
+  exclude-rules:
+    - path: integration-test
+      linters:
+        - paralleltest
+        - godot
+    - path: internal/transport/http/resources
+      linters:
+        - godot
+        - errcheck
+    - path: internal/transport/grpc/resources
+      linters:
+        - revive
+        - stylecheck
+    - path: internal/app
+      linters:
+        - funlen # потому что Run всегда будет большим
+        - gocyclo
+        - cyclop
+        - gocognit
+    - path: cmd/mock-service-mesh
+      linters:
+        - gochecknoglobals
+
+run:
+  timeout: 5m
+  tests: false
+  skip-dirs:
+    - docs
+    - vendor

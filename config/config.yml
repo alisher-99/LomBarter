@@ -1,0 +1,30 @@
+environment:
+  name: local
+
+logger:
+  level: debug
+
+database:
+  url: mongodb://localhost:27017
+
+kafka:
+  brokers: "localhost:59092"
+  consumers:
+    - topic: "user.update"
+      group: "user.update-group-1"
+      asyncCommits: false
+  producers:
+    - topic: "some.topic"
+      numPartitions: 1
+      replicationFactor: 1
+      balancer: "least-bytes"
+      async: false
+      batchBytes: 1048576
+      compressionCodec: "gzip"
+      disallowAutoTopicCreation: false
+      messageRetention: "10m"
+
+cache:
+  addr: localhost:6379
+  username: ""
+  password: ""

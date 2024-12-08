@@ -1,0 +1,322 @@
+basePath: /api
+definitions:
+  entity.List:
+    properties:
+      count:
+        description: Количество сущностей
+        type: integer
+      items:
+        description: Список сущностей
+      state:
+        description: Состояние пагинации
+        type: string
+    type: object
+  entity.Order:
+    properties:
+      cost:
+        description: Стоимость заказа
+        type: integer
+      createdAt:
+        description: Дата создания заказа
+        type: string
+      id:
+        description: Идентификатор заказа
+        type: string
+      userID:
+        description: Идентификатор пользователя
+        type: string
+    type: object
+  entity.User:
+    properties:
+      bio:
+        description: Биография пользователя
+        type: string
+      createdAt:
+        description: Дата создания пользователя
+        type: string
+      id:
+        description: Идентификатор пользователя
+        type: string
+      name:
+        description: Имя пользователя
+        type: string
+      updatedAt:
+        description: Дата обновления пользователя
+        type: string
+    type: object
+  form.OrderCreate:
+    properties:
+      cost:
+        description: Стоимость заказа
+        example: 39900
+        type: integer
+    required:
+    - cost
+    type: object
+  form.UserCreate:
+    properties:
+      bio:
+        description: Биография пользователя
+        maxLength: 500
+        minLength: 3
+        type: string
+      name:
+        description: Имя пользователя
+        maxLength: 255
+        minLength: 3
+        type: string
+    required:
+    - name
+    type: object
+  presenter.CreatedOrder:
+    properties:
+      cost:
+        description: Стоимость заказа
+        example: 39900
+        type: integer
+      id:
+        description: Идентификатор заказа
+        example: 655d8a3577a0a79c69a7cdfc
+        type: string
+      userID:
+        description: Идентификатор пользователя
+        example: 655d8a4d3afea534e56b570e
+        type: string
+    type: object
+  swagger.HTTPResponse400:
+    properties:
+      code:
+        description: Код ошибки.
+        example: TMP_INVALID_USER
+        type: string
+    type: object
+  swagger.HTTPResponse500:
+    properties:
+      code:
+        description: Код ошибки.
+        example: TMP_INTERNAL
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Сервис для работы с ServiceName
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: ServiceName API
+  version: "1.0"
+paths:
+  /v1/orders:
+    get:
+      consumes:
+      - application/json
+      description: Список заказов
+      parameters:
+      - description: Идентификатор пользователя
+        in: header
+        name: X-User-Id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.List'
+            - properties:
+                items:
+                  items:
+                    $ref: '#/definitions/entity.Order'
+                  type: array
+              type: object
+        "400":
+          description: Код ошибки
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse400'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse500'
+      summary: Список заказов
+      tags:
+      - orders
+    post:
+      consumes:
+      - application/json
+      description: Создание заказа
+      parameters:
+      - description: Идентификатор пользователя
+        in: header
+        name: X-User-Id
+        required: true
+        type: string
+      - description: Заказ
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/form.OrderCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/presenter.CreatedOrder'
+        "400":
+          description: Код ошибки
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse400'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse500'
+      summary: Создание заказа
+      tags:
+      - orders
+  /v1/orders/{orderID}:
+    get:
+      consumes:
+      - application/json
+      description: Информация о заказе
+      parameters:
+      - description: Идентификатор пользователя
+        in: header
+        name: X-User-Id
+        required: true
+        type: string
+      - description: Идентификатор заказа
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Order'
+        "400":
+          description: Код ошибки
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse400'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse500'
+      summary: Информация о заказе
+      tags:
+      - orders
+  /v1/users:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка пользователей
+      parameters:
+      - description: Имя пользователя
+        in: query
+        maxLength: 255
+        minLength: 3
+        name: bio
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.List'
+            - properties:
+                items:
+                  items:
+                    $ref: '#/definitions/entity.User'
+                  type: array
+              type: object
+        "400":
+          description: Код ошибки
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse400'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse500'
+      summary: Получение списка пользователей
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Создание пользователя
+      parameters:
+      - description: Пользователь
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/form.UserCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Код ошибки
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse400'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse500'
+      summary: Создание пользователя
+      tags:
+      - users
+  /v1/users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Получение пользователя по идентификатору
+      parameters:
+      - description: Идентификатор пользователя
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.User'
+        "400":
+          description: Код ошибки
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse400'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/swagger.HTTPResponse500'
+      summary: Получение пользователя по идентификатору
+      tags:
+      - users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
